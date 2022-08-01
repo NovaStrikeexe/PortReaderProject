@@ -4,13 +4,13 @@ using System.Configuration;
 
 namespace PortWebSocketServer
 {
-    class WritingToPortService
+    class WritingToPortGeneratedDataService
     {
         SerialPort _serialPort = new SerialPort(
                 ConfigurationManager.AppSettings.Get("Port2"),
                 9600,
                 Parity.Even,
-                8,
+                7,
                 StopBits.One
             );
         Random rnd = new Random();
@@ -21,8 +21,8 @@ namespace PortWebSocketServer
         }
         public void GeneratRawDataToPort()
         {
-            int x = rnd.Next(1, 20000);
             int y = rnd.Next(1, 2000);
+            int x = rnd.Next(y, 20000);
             int z = x - y;
             var dataPort = new DataPort
             {
@@ -31,7 +31,6 @@ namespace PortWebSocketServer
                 tare = y,
                 net = z
             };
-            //Console.WriteLine(dataPort.operationNumber + "/" + dataPort.gross + "/" + dataPort.tare + "/" + dataPort.net);
             _serialPort.Write(dataPort.operationNumber + "/" + dataPort.gross + "/" + dataPort.tare + "/" + dataPort.net);
         }
         public void serialPortClose()

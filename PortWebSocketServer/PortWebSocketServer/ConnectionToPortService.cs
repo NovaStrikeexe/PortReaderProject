@@ -12,17 +12,17 @@ namespace PortWebSocketServer
         public void OpenPort()
         {
             _serialPort.PortName = ConfigurationManager.AppSettings.Get("Port");
-            //_serialPort.BaudRate = 9600;
-            //_serialPort.DataBits = 64;
-            //_serialPort.Parity = Parity.Even;
-            //_serialPort.StopBits = StopBits.One;
+            _serialPort.BaudRate = 9600;
+            _serialPort.DataBits = 7;
+            _serialPort.Parity = Parity.Even;
+            _serialPort.StopBits = StopBits.One;
             _serialPort.Open();
         }
         public void ClosePort()
         {
             _serialPort.Close();
         }
-        public string GetDataFromPort()
+        public string GetDataFromPort()//Xunit
         {
             
             string data = _serialPort.ReadExisting();
