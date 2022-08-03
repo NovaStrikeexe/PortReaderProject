@@ -1,27 +1,48 @@
 ﻿using System;
+using System.IO;
+using System.IO.Ports;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Configuration;
 
-namespace SocketTcpClient
+namespace PortReaderService.Services
 {
-    class Program
+    internal class PostmanOfRawDataService
     {
-        static void Main(string[] args)
+        internal void SendRawDataToWS()
         {
+            GeneratRawDataForPortService generatRawDataForPortService = new GeneratRawDataForPortService();
+            GetDataFromPortService dataFromPortService = new GetDataFromPortService();
+            SerialPort portForWriting = new SerialPort(
+                 ConfigurationManager.AppSettings.Get("Port"),
+                 9600,
+                 Parity.Even,
+                 7,
+                 StopBits.One
+                 );
+            SerialPort portForReading = new SerialPort(
+                ConfigurationManager.AppSettings.Get("Port2"),
+                9600,
+                Parity.Even,
+                7,
+                StopBits.One
+                );
             try
             {
                 IPEndPoint ipPoint = new IPEndPoint(
                 IPAddress.Parse(ConfigurationManager.AppSettings.Get("WSAdress")),
                 Int32.Parse(ConfigurationManager.AppSettings.Get("WSPort"))
             );
-
+                portForWriting.Open();
+                portForReading.Open();
+                portForWriting.WriteLine(generatRawDataForPortService.GeneratRawDataForPort());
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 socket.Connect(ipPoint);
-                Console.Write("Check for data from the device: Y/N ");
-                string message = Console.ReadLine();
-                if (message == "y" || message == "Y")
+                string message = dataFromPortService.GetDataFromPort(portForReading.ReadExisting());
+                portForWriting.Close();
+                portForReading.Close();
+                if (message != "")
                 {
                     byte[] data = Encoding.ASCII.GetBytes(message);
                     socket.Send(data);
@@ -41,9 +62,9 @@ namespace SocketTcpClient
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                File.AppendAllText(@"C:\Users\phant\Desktop\TestFOLDER\Logs.txt",ex.Message);
             }
-            Console.Read();
+
         }
     }
 }

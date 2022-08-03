@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PortWebSocketClient")]
+[assembly: AssemblyTitle("PortReaderService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PortWebSocketClient")]
+[assembly: AssemblyProduct("PortReaderService")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("100055f6-ebbf-46db-868b-f611b0cd8ea1")]
+[assembly: Guid("678f5a04-c842-4a1b-8c32-b4a2e0903a18")]
 
 // Version information for an assembly consists of the following four values:
 //

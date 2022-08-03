@@ -7,13 +7,9 @@ namespace PortWebSocketServer
 {
     class Program
     {
-
-
         static void Main(string[] args)
         {
-            ConnectionToPortService connectionToPortService = new ConnectionToPortService();
-            WritingToPortGeneratedDataService writingToPortGeneratedDataService = new WritingToPortGeneratedDataService();
-
+            //RawDataProcessingService rawDataProcessingService = new RawDataProcessingService();
             IPEndPoint ipPoint = new IPEndPoint(
                 IPAddress.Parse(ConfigurationManager.AppSettings.Get("WSAdress")),
                 Int32.Parse(ConfigurationManager.AppSettings.Get("WSPort"))
@@ -34,22 +30,20 @@ namespace PortWebSocketServer
                 {
                     bytes = handler.Receive(data);
                     builder.Append(Encoding.ASCII.GetString(data, 0, bytes));
-                    if (builder.ToString() == "y" || builder.ToString() == "Y")
-                    {
-                        connectionToPortService.OpenPort();
-                        writingToPortGeneratedDataService.serialPortOpen();
-                        writingToPortGeneratedDataService.GeneratRawDataToPort();
-                    }
+                    
                 }
                 while (handler.Available > 0);
                 Console.WriteLine(DateTime.Now.ToShortTimeString() + ": " + builder.ToString());
-                message = connectionToPortService.GetDataFromPort();
-                connectionToPortService.ClosePort();
-                writingToPortGeneratedDataService.serialPortClose();
-                data = Encoding.ASCII.GetBytes(message);
-                handler.Send(data);
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
+                if (builder.ToString() != "")
+                {
+                    data = Encoding.ASCII.GetBytes(builder.ToString());
+                    Console.WriteLine("The result of processing the received data \n" + data);
+
+                }
+                else
+                {
+                    data = Encoding.ASCII.GetBytes("No data found in received message");
+                }
             }
             catch (Exception ex)
             {
